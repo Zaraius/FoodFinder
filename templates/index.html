@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Late Night Eats</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Late Night Eats</h1>
+        <div class="search-container">
+            <form action="/search" method="POST">
+                <div class="filters">
+                    <select name="price_range">
+                        <option value="">Price Range</option>
+                        <option value="$">$</option>
+                        <option value="$$">$$</option>
+                        <option value="$$$">$$$</option>
+                    </select>
+                    <select name="distance">
+                        <option value="">Distance</option>
+                        <option value="0.5">0.5 miles</option>
+                        <option value="1">1 mile</option>
+                        <option value="2">2 miles</option>
+                    </select>
+                    <select name="cuisine">
+                        <option value="">Cuisine Type</option>
+                        <option value="pizza">Pizza</option>
+                        <option value="burger">Burgers</option>
+                        <option value="chinese">Chinese</option>
+                        <option value="mexican">Mexican</option>
+                    </select>
+                </div>
+                <div class="search-box">
+                    <input type="text" name="query" placeholder="What are you craving?">
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+        
+        {% if results %}
+        <div class="results">
+            <h2>Top 5 Recommendations</h2>
+            {% for result in results %}
+            <div class="result-card">
+                <h3>{{ result.name }}</h3>
+                <p>{{ result.description }}</p>
+                <div class="details">
+                    <span>{{ result.price }}</span>
+                    <span>{{ result.distance }} miles</span>
+                    <span>{{ result.cuisine }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html> 
