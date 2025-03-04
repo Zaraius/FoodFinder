@@ -24,13 +24,6 @@
                         <option value="1">1 mile</option>
                         <option value="2">2 miles</option>
                     </select>
-                    <select name="cuisine">
-                        <option value="">Cuisine Type</option>
-                        <option value="pizza">Pizza</option>
-                        <option value="burger">Burgers</option>
-                        <option value="chinese">Chinese</option>
-                        <option value="mexican">Mexican</option>
-                    </select>
                 </div>
                 <div class="search-box">
                     <input type="text" name="query" placeholder="What are you craving?">
@@ -48,8 +41,8 @@
                 <p>{{ result.description }}</p>
                 <div class="details">
                     <span>{{ result.price }}</span>
-                    <span>{{ result.distance }} miles</span>
                     <span>{{ result.cuisine }}</span>
+                    <span>{{ result.distance }} miles</span>
                 </div>
             </div>
             {% endfor %}
