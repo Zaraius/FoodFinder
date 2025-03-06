@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request
 import pandas as pd
-from openai import OpenAI
+import openai
 import os
 import json
 
 class RestaurantChatbot:
     def __init__(self, csv_path):
-        self.client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        self.client = openai
+        self.client.api_key = os.environ["OPENAI_API_KEY"]
         # Load the CSV file using pandas with explicit encoding
         try:
             self.df = pd.read_csv(csv_path, encoding='utf-8', encoding_errors='ignore')
@@ -39,7 +40,7 @@ class RestaurantChatbot:
         user_message = user_message.encode("utf-8", "ignore").decode("utf-8")
         restaurants_data = restaurants_data.encode("utf-8", "ignore").decode("utf-8")
         try:
-            response = self.client.chat.completions.create(
+            response = self.client.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": system_message},
@@ -50,7 +51,7 @@ class RestaurantChatbot:
             )
             
             # Extract the response and convert it to Python object
-            response_text = response.choices[0].message.content
+            response_text = response.choices[0].message['content']
             try:
                 # First try json.loads
                 results = json.loads(response_text)
@@ -94,4 +95,4 @@ def search():
         return render_template('index.html', error="Sorry, something went wrong!")
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)

@@ -26,8 +26,12 @@ def clean_csv(input_file, output_file):
         for column in df.columns:
             df[column] = df[column].apply(clean_text)
         
+        # Drop rows where any review column is NaN
+        review_columns = [col for col in df.columns if 'Review' in col]
+        df.dropna(subset=review_columns, inplace=True)
+        
         # Save the cleaned data
-        df.to_csv(output_file, index=False, sep='|', encoding='ascii')
+        df.to_csv(output_file, index=False, sep='|', encoding='utf-8')
         print(f"Successfully cleaned {input_file} and saved to {output_file}")
         
     except Exception as e:
@@ -36,4 +40,4 @@ def clean_csv(input_file, output_file):
 if __name__ == "__main__":
     input_file = "mvp_database.csv"  # Your original CSV file
     output_file = "mvp_database_cleaned.csv"  # The cleaned version
-    clean_csv(input_file, output_file) 
+    clean_csv(input_file, output_file)
