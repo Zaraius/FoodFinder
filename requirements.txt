@@ -3,4 +3,4 @@ gunicorn
 requests
 beautifulsoup4
 pandas
-openai
+openai == 0.28
