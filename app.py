@@ -1,98 +1,104 @@
-from flask import Flask, render_template, request
-import pandas as pd
+from flask import Flask, request, jsonify, render_template, session
 import openai
-import os
 import json
+import os
+
+app = Flask(__name__)
+app.secret_key = os.urandom(24)  # Secret key for session management
+
+# Load restaurant data
+with open("restaurants.json", "r") as file:
+    restaurant_data = json.load(file)
+
+# OpenAI API key (ensure it's set in the environment)
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class RestaurantChatbot:
-    def __init__(self, csv_path):
-        self.client = openai
-        self.client.api_key = os.environ["OPENAI_API_KEY"]
-        # Load the CSV file using pandas with explicit encoding
-        try:
-            self.df = pd.read_csv(csv_path, encoding='utf-8', encoding_errors='ignore')
-        except UnicodeDecodeError:
-            self.df = pd.read_csv(csv_path, encoding='latin-1')
-        
-    def get_response(self, query, price_range=None, distance=None):
-        # Convert dataframe to a more structured format
-        restaurants_list = self.df.to_dict('records')
-        # Convert to JSON string and back to ensure clean serialization
-        restaurants_data = json.dumps(restaurants_list, ensure_ascii=False).encode('utf-8').decode('utf-8')
-        
-        # Construct the system message
-        system_message = """You are a helpful assistant that recommends restaurants based on user preferences. 
-        Analyze the restaurant data and provide the top 5 most relevant recommendations.
-        Format your response as a list of dictionaries with 'name', 'description', and 'price' keys.
-        Keep descriptions concise and relevant to the query."""
+    def __init__(self, data):
+        self.data = data
 
-        # Construct the user message with all preferences
-        user_message = f"Based on this restaurant data, "
-        user_message += f"find the best restaurants matching these criteria:\n"
-        user_message += f"Query: {query}\n"
+    def get_response(self, query, price_range=None, distance=None):
+        # Convert restaurant data to JSON format
+        restaurants_json = json.dumps(self.data, ensure_ascii=False)
+
+        system_message = (
+            "You are a friendly restaurant recommendation chatbot. "
+            "Help users find restaurants based on their preferences. "
+            "Make the response engaging, start with a warm introduction, "
+            "list the recommendations in a friendly way, and end by asking if they need more help."
+        )
+
+        user_message = f"I want restaurant recommendations. My preferences are:\nQuery: {query}\n"
         if price_range:
             user_message += f"Price Range: {price_range}\n"
         if distance:
-            user_message += f"Distance: Within {distance} miles\n"
-        user_message += "\nProvide exactly 5 recommendations in this format:\n"
-        user_message += "[{'name': 'Restaurant Name', 'description': 'Brief description', 'price': 'Price range'}]"
+            user_message += f"Distance: {distance} miles\n"
 
-        user_message = user_message.encode("utf-8", "ignore").decode("utf-8")
-        restaurants_data = restaurants_data.encode("utf-8", "ignore").decode("utf-8")
+        user_message += (
+            "If no restaurants match, respond with: 'Hmm, I couldn't find anything for that. "
+            "Want to try something else?'"
+        )
+
         try:
-            response = self.client.ChatCompletion.create(
+            response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": system_message},
-                    {"role": "user", "content": user_message},
-                    {"role": "assistant", "content": f"I'll analyze this data: {restaurants_data}"}
+                    {"role": "user", "content": user_message + "\n\n" + restaurants_json}
                 ],
+                max_tokens=350,
                 temperature=0.7
             )
-            
-            # Extract the response and convert it to Python object
-            response_text = response.choices[0].message['content']
-            try:
-                # First try json.loads
-                results = json.loads(response_text)
-                return results
-            except json.JSONDecodeError:
-                try:
-                    # Fallback to ast.literal_eval
-                    import ast
-                    results = ast.literal_eval(response_text)
-                    return results
-                except:
-                    return [{"name": "Error", "description": "Could not parse results", "price": "N/A"}]
-                
+
+            response_text = response["choices"][0]["message"]["content"].strip()
+            return response_text if response_text else "Hmm, I couldn't find anything for that. Want to try something else?"
+
         except Exception as e:
-            print(f"Error: {e}")
-            return [{"name": "Error", "description": str(e), "price": "N/A"}]
+            print(f"API Error: {e}")
+            return "Oops! Something went wrong. Want to try again?"
 
-# Initialize Flask app
-app = Flask(__name__)
-
-# Initialize chatbot once when starting the server
-chatbot = RestaurantChatbot(
-    csv_path='mvp_database_cleaned.csv'
-)
+# Initialize chatbot
+chatbot = RestaurantChatbot(data=restaurant_data)
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
+@app.route('/start_conversation', methods=['GET'])
+def start_conversation():
+    # Start a new session for conversation flow
+    session['step'] = 'food'
+    return jsonify({"response": "Hi! What type of food are you craving today?"})
+
 @app.route('/search', methods=['POST'])
 def search():
-    query = request.form.get('query', '')
-    price_range = request.form.get('price_range', '')
-    distance = request.form.get('distance', '')
+    # Get user input from frontend
+    user_input = request.form.get('user_input', '')
+    current_step = session.get('step', 'food')
 
-    try:
-        results = chatbot.get_response(query, price_range, distance)
-        return render_template('index.html', results=results)
-    except Exception as e:
-        print(f"Error: {e}")
-        return render_template('index.html', error="Sorry, something went wrong!")
+    # Start chatbot logic based on current step
+    if current_step == 'food':
+        session['food'] = user_input
+        session['step'] = 'price_range'
+        response = "Got it! What is your budget for the meal?"
+    
+    elif current_step == 'price_range':
+        session['price_range'] = user_input
+        session['step'] = 'distance'
+        response = "Thanks! How far are you willing to travel? Or do you want to know restaurants open at a specific time?"
+    
+    elif current_step == 'distance':
+        session['distance'] = user_input
+        session['step'] = 'completed'
+        # After collecting all info, fetch restaurant suggestions
+        query = session.get('food')
+        price_range = session.get('price_range')
+        distance = session.get('distance')
+        
+        # Get recommendations from the chatbot
+        response = chatbot.get_response(query, price_range, distance)
+    
+    return jsonify({"response": response})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
