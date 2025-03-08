@@ -1,0 +1,191 @@
+[
+    {
+        "name": "Hot Doogy",
+        "open_hours": "11AM - 2AM",
+        "ambiance": "",
+        "food_drinks": ["Brazilian style hot dogs", "milkshakes", "burgers"],
+        "average_cost": "$10-20",
+        "type_of_business": "small chain",
+        "dining_option": "both"
+    },
+    {
+        "name": "McDonalds",
+        "open_hours": "24 hrs",
+        "ambiance": "",
+        "food_drinks": ["fast food", "burgers"],
+        "average_cost": "$10-20",
+        "type_of_business": "corporation",
+        "dining_option": "Grab and Go"
+    },
+    {
+        "name": "Dunkin Donuts",
+        "open_hours": "24 hrs",
+        "ambiance": "",
+        "food_drinks": ["donuts", "coffee", "pastries"],
+        "average_cost": "$10-20",
+        "type_of_business": "corporation",
+        "dining_option": "Grab and Go"
+    },
+    {
+        "name": "iHop",
+        "open_hours": "24 hrs",
+        "ambiance": "",
+        "food_drinks": ["pancakes", "burgers", "sandwiches", "eggs", "breakfast foods"],
+        "average_cost": "$10-20",
+        "type_of_business": "corporation",
+        "dining_option": "Sit Down"
+    },
+    {
+        "name": "Dave's Hot Chicken",
+        "open_hours": "11AM - 11PM",
+        "ambiance": "",
+        "food_drinks": ["chicken tenders", "sliders", "mac and cheese"],
+        "average_cost": "$10-20",
+        "type_of_business": "corporation",
+        "dining_option": "both"
+    },
+    {
+        "name": "Chipotle",
+        "open_hours": "10:45AM - 11PM",
+        "ambiance": "",
+        "food_drinks": ["Mexican food", "tacos", "burritos", "salad bowls"],
+        "average_cost": "$20-30",
+        "type_of_business": "corporation",
+        "dining_option": "both"
+    },
+    {
+        "name": "Blue on Highland",
+        "open_hours": "11:30AM - 10PM",
+        "ambiance": "live jazz, casual, trendy",
+        "food_drinks": ["modern American", "pizzas", "burgers", "sandwiches", "tacos"],
+        "average_cost": "$20-30",
+        "type_of_business": "small business",
+        "dining_option": "Sit Down"
+    },
+    {
+        "name": "Echo Bridge Restaurant and Cafe",
+        "open_hours": "11AM - 10PM",
+        "ambiance": "a little bit cozy",
+        "food_drinks": ["pizza", "Italian entrees"],
+        "average_cost": "$20-30",
+        "type_of_business": "small business, family owned",
+        "dining_option": "Sit Down"
+    },
+    {
+        "name": "Great Wok Wellesley",
+        "open_hours": "11:30AM - 9:30PM",
+        "ambiance": "casual, quiet",
+        "food_drinks": ["Hunan", "Sichuan", "Hong Kong-style Chinese fare", "cocktails", "sushi"],
+        "average_cost": "$20-30",
+        "type_of_business": "small business",
+        "dining_option": "both"
+    },
+    {
+        "name": "SweetGreen",
+        "open_hours": "9:30AM - 10PM",
+        "ambiance": "modern",
+        "food_drinks": ["organic salads", "bowls"],
+        "average_cost": "$10-20",
+        "type_of_business": "small chain",
+        "dining_option": "Grab and Go"
+    },
+    {
+        "name": "Morse Tavern",
+        "open_hours": "11:30AM - 12AM",
+        "ambiance": "sports bar, live music",
+        "food_drinks": ["American foods", "wings", "beer", "mac and cheese"],
+        "average_cost": "$20-30",
+        "type_of_business": "small business, family owned",
+        "dining_option": "Sit Down"
+    },
+    {
+        "name": "The Common Room",
+        "open_hours": "5:00PM - 12AM",
+        "ambiance": "dark, quiet, hand-written menu on walls",
+        "food_drinks": ["Bavarian pretzel", "nachos", "guacamole and chips", "steaks", "turkey tips", "salmon", "chicken shish kabobs"],
+        "average_cost": "$20-30",
+        "type_of_business": "small business",
+        "dining_option": "both"
+    },
+    {
+        "name": "Gari Japanese Fusion Bistro",
+        "open_hours": "11:15AM - 9:30 PM",
+        "ambiance": "Upscale Japanese place tailored towards Americans",
+        "food_drinks": ["Sushi", "maki", "Japanese food"],
+        "average_cost": "$30-50",
+        "type_of_business": "small business",
+        "dining_option": "Sit Down"
+    },
+    {
+        "name": "The Dooliner Irish Pub and Restaurant",
+        "open_hours": "12:00PM - 1:00AM",
+        "ambiance": "Modern take on an Irish pub with upscale vibes",
+        "food_drinks": ["British food", "shepherd pie", "burger"],
+        "average_cost": "$10-20",
+        "type_of_business": "small business",
+        "dining_option": "Sit Down"
+    },
+    {
+        "name": "Conrad's Restaurant",
+        "open_hours": "11:30AM - 12:00AM",
+        "ambiance": "Upscale casual American",
+        "food_drinks": ["American food", "chicken tenders", "fries", "seafood"],
+        "average_cost": "$20-30",
+        "type_of_business": "corporation",
+        "dining_option": "Sit Down"
+    },
+    {
+        "name": "Brighton Bodega",
+        "open_hours": "4:30PM - 1:00AM",
+        "ambiance": "Modern pub with stone walls and wood benches",
+        "food_drinks": ["Snack food", "seafood", "burgers"],
+        "average_cost": "$10-20",
+        "type_of_business": "small business",
+        "dining_option": "Sit Down"
+    },
+    {
+        "name": "Porter Cafe",
+        "open_hours": "4:00PM - 1:00AM",
+        "ambiance": "British pub, gastropub, seasonal patio, intimate dining",
+        "food_drinks": ["American comfort fare", "craft beer", "cocktails", "tacos", "oysters"],
+        "average_cost": "$20-30",
+        "type_of_business": "small business",
+        "dining_option": "both"
+    },
+    {
+        "name": "The Abbey",
+        "open_hours": "11:00AM - 2:00AM",
+        "ambiance": "Cozy eatery and bar, pub-style, new American bites",
+        "food_drinks": ["Korean BBQ tacos", "Italian panini", "deviled eggs", "American food", "everything seasoned Bavarian pretzel"],
+        "average_cost": "$20-30",
+        "type_of_business": "small business",
+        "dining_option": "both"
+    },
+    {
+        "name": "New Dragon Chef",
+        "open_hours": "3:00PM - 1:00AM",
+        "ambiance": "Slightly rundown Chinese takeout",
+        "food_drinks": ["Chinese food"],
+        "average_cost": "$10-20",
+        "type_of_business": "small business",
+        "dining_option": "Grab and Go"
+    },
+    {
+        "name": "Ray's New Garden",
+        "open_hours": "12:00PM - 11:00PM",
+        "ambiance": "Upscale modern bar with Asian styling",
+        "food_drinks": ["Chinese and Japanese food"],
+        "average_cost": "$15-25",
+        "type_of_business": "small business",
+        "dining_option": "Sit Down"
+    },
+    {
+        "name": "Corrib Pub & Restaurant",
+        "open_hours": "12:00PM - 2:00AM",
+        "ambiance": "Classic Irish pub/sports bar",
+        "food_drinks": ["Bar food", "soup", "wings", "chicken sandwich"],
+        "average_cost": "$10-20",
+        "type_of_business": "small business",
+        "dining_option": "Sit Down"
+    }
+]
