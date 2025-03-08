@@ -9,44 +9,25 @@
 <body>
     <div class="container">
         <h1>Late Night Eats</h1>
-        <div class="search-container">
-            <form action="/search" method="POST">
-                <div class="filters">
-                    <select name="price_range">
-                        <option value="">Price Range</option>
-                        <option value="$">$</option>
-                        <option value="$$">$$</option>
-                        <option value="$$$">$$$</option>
-                    </select>
-                    <select name="distance">
-                        <option value="">Distance</option>
-                        <option value="0.5">0.5 miles</option>
-                        <option value="1">1 mile</option>
-                        <option value="2">2 miles</option>
-                    </select>
-                </div>
-                <div class="search-box">
-                    <input type="text" name="query" placeholder="What are you craving?">
-                    <button type="submit">Search</button>
-                </div>
-            </form>
+
+        <!-- Chatbox -->
+        <div id="chatbox" class="chatbox">
+            {% if results %}
+                {% for result in results %}
+                    <div class="bot-message bot-response">
+                        <strong>{{ result.name }}</strong>: {{ result.description }} ({{ result.price }})
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
-        
-        {% if results %}
-        <div class="results">
-            <h2>Top 5 Recommendations</h2>
-            {% for result in results %}
-            <div class="result-card">
-                <h3>{{ result.name }}</h3>
-                <p>{{ result.description }}</p>
-                <div class="details">
-                    <span>{{ result.price }}</span>
-                    <span>{{ result.distance }} miles</span>
-                </div>
-            </div>
-            {% endfor %}
+
+        <!-- Input Container -->
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type your message here..." />
+            <button id="send">Send</button>
         </div>
-        {% endif %}
     </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-</html> 
+</html>
