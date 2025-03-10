@@ -22,10 +22,10 @@ class RestaurantChatbot:
         restaurants_json = json.dumps(self.data, ensure_ascii=False)
 
         system_message = (
-            "You are a friendly restaurant recommendation chatbot. "
-            "Help users find restaurants based on their preferences. "
+            "You are a friendly top 5 restaurant recommendation chatbot. "
+            "Help users find small businesses based on their preferences. "
             "Make the response engaging, start with a warm introduction, "
-            "list the recommendations in a friendly way, and end by asking if they need more help."
+            "list the recommendations in a friendly way, and end by asking if they need more help. The recommendations provided should be highly specific to the user's needs"
         )
 
         user_message = f"I want restaurant recommendations. My preferences are:\nQuery: {query}\n"
