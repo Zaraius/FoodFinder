@@ -41,7 +41,7 @@ class RestaurantChatbot:
 
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-4o-mini",
+                model="gpt-4o",
                 messages=[
                     {"role": "system", "content": system_message},
                     {"role": "user", "content": user_message + "\n\n" + restaurants_json}
