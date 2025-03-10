@@ -41,11 +41,9 @@ class RestaurantChatbot:
 
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-4o",
-                messages=[
-                    {"role": "system", "content": system_message},
-                    {"role": "user", "content": user_message + "\n\n" + restaurants_json}
-                ],
+                model="gpt-4",  # Use the correct model
+                messages=[{"role": "system", "content": system_message},
+                          {"role": "user", "content": user_message + "\n\n" + restaurants_json}],
                 max_tokens=350,
                 temperature=0.7
             )
@@ -53,7 +51,7 @@ class RestaurantChatbot:
             response_text = response["choices"][0]["message"]["content"].strip()
             return response_text if response_text else "Hmm, I couldn't find anything for that. Want to try something else?"
 
-        except Exception as e:
+        except openai.error.OpenAIError as e:
             print(f"API Error: {e}")
             return "Oops! Something went wrong. Want to try again?"
 
