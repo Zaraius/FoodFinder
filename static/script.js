@@ -6,13 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function addMessageToChatbox(message, isUser = false) {
         const messageElement = document.createElement("div");
         messageElement.classList.add("message");
-
-        if (isUser) {
-            messageElement.classList.add("user-message");
-        } else {
-            messageElement.classList.add("bot-message");
-        }
-
+        messageElement.classList.add(isUser ? "user-message" : "bot-message");
         messageElement.innerHTML = message.replace(/\n/g, "<br>");
         chatbox.appendChild(messageElement);
         chatbox.scrollTop = chatbox.scrollHeight;
@@ -21,16 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function getBotResponse(userMessage) {
         fetch("/search", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({ query: userMessage }),
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ user_input: userMessage }),
         })
             .then((response) => response.json())
-            .then((data) => {
-                const botResponse = data.response || "Oops! No response.";
-                setTimeout(() => addMessageToChatbox(botResponse, false), 1000);
-            })
+            .then((data) => addMessageToChatbox(data.response, false))
             .catch((error) => console.error("Error fetching response:", error));
     }
 
@@ -43,5 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    addMessageToChatbox("What are you craving today?", false);
+    fetch("/start_conversation")
+        .then((response) => response.json())
+        .then((data) => addMessageToChatbox(data.response, false));
 });
