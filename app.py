@@ -18,38 +18,29 @@ class RestaurantChatbot:
         self.data = data
 
     def get_response(self, query, price_range=None, distance=None):
-        # Convert restaurant data to JSON format
-        restaurants_json = json.dumps(self.data, ensure_ascii=False)
-
+        """Send all restaurant data to OpenAI and let it decide."""
+        
         system_message = (
-            "You are a friendly top 5 restaurant recommendation chatbot. "
-            "Help users find small businesses based on their preferences. "
-            "Make the response engaging, start with a warm introduction, "
-            "list the recommendations in a friendly way, and end by asking if they need more help. The recommendations provided should be highly specific to the user's needs"
+            "You are a helpful restaurant recommendation chatbot. "
+            "Users will ask for food recommendations, and you should suggest the best options "
+            "from the provided list of restaurants. Consider their preferences, but if no exact match exists, "
+            "offer something similar."
         )
 
-        user_message = f"I want restaurant recommendations. My preferences are:\nQuery: {query}\n"
-        if price_range:
-            user_message += f"Price Range: {price_range}\n"
-        if distance:
-            user_message += f"Distance: {distance} miles\n"
-
-        user_message += (
-            "If no restaurants match, respond with: 'Hmm, I couldn't find anything for that. "
-            "Want to try something else?'"
-        )
+        user_message = f"I am looking for {query} within {distance} miles and my budget is {price_range}. Can you recommend something?"
 
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-4",  # Use the correct model
-                messages=[{"role": "system", "content": system_message},
-                          {"role": "user", "content": user_message + "\n\n" + restaurants_json}],
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": user_message + "\n\nHere is the restaurant data:\n" + json.dumps(self.data, ensure_ascii=False)}
+                ],
                 max_tokens=350,
                 temperature=0.7
             )
 
-            response_text = response["choices"][0]["message"]["content"].strip()
-            return response_text if response_text else "Hmm, I couldn't find anything for that. Want to try something else?"
+            return response["choices"][0]["message"]["content"].strip()
 
         except openai.error.OpenAIError as e:
             print(f"API Error: {e}")
@@ -64,39 +55,35 @@ def home():
 
 @app.route('/start_conversation', methods=['GET'])
 def start_conversation():
-    # Start a new session for conversation flow
     session['step'] = 'food'
     return jsonify({"response": "Hi! What type of food are you craving today?"})
 
 @app.route('/search', methods=['POST'])
 def search():
-    # Get user input from frontend
-    user_input = request.form.get('user_input', '')
+    user_input = request.form.get('user_input', '').strip()
     current_step = session.get('step', 'food')
 
-    # Start chatbot logic based on current step
     if current_step == 'food':
         session['food'] = user_input
         session['step'] = 'price_range'
-        response = "Got it! What is your budget for the meal?"
+        return jsonify({"response": "Got it! What is your budget for the meal?"})
     
     elif current_step == 'price_range':
         session['price_range'] = user_input
         session['step'] = 'distance'
-        response = "Thanks! How far are you willing to travel? Or do you want to know restaurants open at a specific time?"
+        return jsonify({"response": "Thanks! How far are you willing to travel?"})
     
     elif current_step == 'distance':
         session['distance'] = user_input
-        session['step'] = 'completed'
-        # After collecting all info, fetch restaurant suggestions
-        query = session.get('food')
+        session['step'] = 'done'
+        food = session.get('food')
         price_range = session.get('price_range')
-        distance = session.get('distance')
-        
-        # Get recommendations from the chatbot
-        response = chatbot.get_response(query, price_range, distance)
-    
-    return jsonify({"response": response})
+        distance = int(user_input) if user_input.isdigit() else None
+
+        recommendations = chatbot.get_response(food, price_range, distance)
+        return jsonify({"response": recommendations})
+
+    return jsonify({"response": "I'm here to help! What kind of food are you craving?"})
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)
